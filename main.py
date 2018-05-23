@@ -32,6 +32,7 @@ def getAdrr():
 def razIP(event):
     subprocess.call('netsh interface ipv4 set address "Connexion au réseau local" dhcp', shell=True)
 
+
 def changeIP(event):
     tmpName = Li_file.get(Li_file.curselection())
     for i, row in enumerate(data):
@@ -46,6 +47,7 @@ def showWlan(event):
     show = subprocess.call('netsh interface ip show config', shell=True)
     print(show)
 
+# Input
 
 # Frame
 F_choice = Frame(root, bg="white", borderwidth=2, relief=FLAT)
@@ -61,7 +63,6 @@ L_ethCard = Label(F_change, text="carte Ethernet")
 # Button
 B_openFile = Button(F_change, text="ouvrir fichier")
 B_change = Button(F_change, text="changer")
-B_ShowWLAN = Button(F_change, text="WLAN")
 B_raz = Button(F_change, text="raz")
 B_close = Button(root, text="fermer", command=root.quit)
 
@@ -71,8 +72,6 @@ Li_file = Listbox(F_change)
 # Generation Graphique
 L_titre.pack()
 L_ethCard.pack()
-B_ShowWLAN.bind("<Button-1>",showWlan)
-B_ShowWLAN.pack()
 B_openFile.bind("<Button-1>",getDataIP)
 B_openFile.pack()
 Li_file.pack()
