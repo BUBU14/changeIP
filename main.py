@@ -1,27 +1,49 @@
 import subprocess
 from tkinter import *
 from tkinter.filedialog import askopenfile
-from getData import getData
+import csv
 
 root = Tk()
 
-def getInfo(event):
-    print("OK")
+data = []
+# Open csv and get data
+def getData(filepath):
+    with open(filepath, newline='') as csvfile:
+        spamReader = csv.reader(csvfile, delimiter=';', quotechar='|')
+        for row in spamReader:
+            tmp = []
+            for col in row:
+                tmp.append(col)
+            data.append(tmp)
 
 # filepath
 def getDataIP(event):
     filepath = askopenfile(title="Ouvrir un csv", filetypes=[('csv files','.csv'),('all files','.*')])
     if filepath !=None:
-        getData(filepath.name)
+        data = getData(filepath.name)
+        getAdrr()
+
+def getAdrr():
+    for i, row in enumerate(data):
+        print(data[i][0])
+        Li_file.insert(1, data[i][0])
+
 
 def razIP(event):
-    subprocess.call('netsh interface ipv4 set address "Réseau local" dhcp', shell=True)
+    subprocess.call('netsh interface ipv4 set address "Connexion au réseau local" dhcp', shell=True)
 
 def changeIP(event):
-    print("work in progress")
+    tmpName = Li_file.get(Li_file.curselection())
+    for i, row in enumerate(data):
+        if data[i][0] == tmpName :
+            print("Match adress")
+            toSet = 'netsh interface ip set address  "Connexion au réseau local" static ',data[i][1], data[i][2], data[i][3]
+            print(toSet)
+            subprocess.call(toSet, shell=True)
+            break
 
 def showWlan(event):
-    show = subprocess.call('netsh wlan show profiles', shell=True)
+    show = subprocess.call('netsh interface ip show config', shell=True)
     print(show)
 
 
@@ -41,7 +63,6 @@ B_openFile = Button(F_change, text="ouvrir fichier")
 B_change = Button(F_change, text="changer")
 B_ShowWLAN = Button(F_change, text="WLAN")
 B_raz = Button(F_change, text="raz")
-B_create = Button(F_create, text="generer")
 B_close = Button(root, text="fermer", command=root.quit)
 
 # Liste
@@ -61,8 +82,6 @@ B_change.pack()
 B_raz.bind("<Button-1>", razIP)
 B_raz.pack()
 F_create.pack(side=RIGHT, padx=30, pady=30)
-B_create.bind("<Button-1>", getInfo)
-B_create.pack()
 F_choice.pack()
 B_close.pack()
 root.mainloop()
