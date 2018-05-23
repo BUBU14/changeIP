@@ -37,8 +37,8 @@ def changeIP(event):
     for i, row in enumerate(data):
         if data[i][0] == tmpName :
             print("Match adress")
-            toSet = 'netsh interface ip set address  "Connexion au réseau local" static ',data[i][1], data[i][2], data[i][3]
-            print(toSet)
+            toSet = 'netsh interface ip set address  "Connexion au réseau local" static ' + data[i][1]+' '+data[i][2]+' '+data[i][3]
+            print(type(toSet))
             subprocess.call(toSet, shell=True)
             break
 
