@@ -1,5 +1,6 @@
 import subprocess
-from tkinter import *
+from tkinter import Tk, Listbox, Label, Button, Frame
+from tkinter import FLAT, GROOVE, LEFT, RIGHT
 from tkinter.filedialog import askopenfile
 import csv
 
