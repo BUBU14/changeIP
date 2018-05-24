@@ -31,6 +31,7 @@ def getAdrr():
 
 
 def razIP(event):
+    print("retour DHCP")
     subprocess.call('netsh interface ipv4 set address "Connexion au réseau local" dhcp', shell=True)
 
 
