@@ -58,7 +58,7 @@ F_change = Frame(F_choice, borderwidth=2, relief=GROOVE)
 
 # Label
 L_titre = Label(root, text="Gestion adresse IP")
-L_ethCard = Label(F_change, text="carte Ethernet")
+
 
 # Button
 B_openFile = Button(F_change, text="ouvrir fichier")
@@ -71,7 +71,6 @@ Li_file = Listbox(F_change)
 
 # Generation Graphique
 L_titre.pack()
-L_ethCard.pack()
 B_openFile.bind("<Button-1>",getDataIP)
 B_openFile.pack()
 Li_file.bind("<Double-Button-1>",changeIP)
