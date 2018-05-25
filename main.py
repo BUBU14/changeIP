@@ -7,6 +7,8 @@ import csv
 root = Tk()
 
 data = []
+
+
 # Open csv and get data
 def getData(filepath):
     with open(filepath, newline='') as csvfile:
@@ -17,12 +19,14 @@ def getData(filepath):
                 tmp.append(col)
             data.append(tmp)
 
+
 # filepath
 def getDataIP(event):
     filepath = askopenfile(title="Ouvrir un csv", filetypes=[('csv files','.csv'),('all files','.*')])
-    if filepath !=None:
-        data = getData(filepath.name)
+    if filepath != None:
+        getData(filepath.name)
         getAdrr()
+
 
 def getAdrr():
     for i, row in enumerate(data):
@@ -31,7 +35,6 @@ def getAdrr():
 
 
 def razIP(event):
-    print("retour DHCP")
     subprocess.call('netsh interface ipv4 set address "Connexion au réseau local" dhcp', shell=True)
 
 
@@ -45,11 +48,6 @@ def changeIP(event):
             subprocess.call(toSet, shell=True)
             break
 
-def showWlan(event):
-    show = subprocess.call('netsh interface ip show config', shell=True)
-    print(show)
-
-# Input
 
 # Frame
 F_choice = Frame(root, bg="white", borderwidth=2, relief=FLAT)
