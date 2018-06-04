@@ -49,6 +49,9 @@ def changeIP(event):
             break
 
 
+def getConfig(event):
+    tmpConfig = subprocess.call('netsh interface ipv4 show address')
+
 # Frame
 F_choice = Frame(root, bg="white", borderwidth=2, relief=FLAT)
 F_change = Frame(F_choice, borderwidth=2, relief=GROOVE)
@@ -62,6 +65,7 @@ L_titre = Label(root, text="Gestion adresse IP")
 # Button
 B_openFile = Button(F_change, text="ouvrir fichier")
 B_change = Button(F_change, text="changer")
+B_getConf = Button(F_change, text="get config")
 B_raz = Button(F_change, text="raz")
 B_close = Button(root, text="fermer", command=root.quit)
 
@@ -74,11 +78,15 @@ B_openFile.bind("<Button-1>",getDataIP)
 B_openFile.pack()
 Li_file.bind("<Double-Button-1>",changeIP)
 Li_file.pack()
+B_getConf.bind("<Button-1>",getConfig)
+B_getConf.pack()
 F_change.pack(side=LEFT, padx=30, pady=30)
 B_change.bind("<Button-1>", changeIP)
 B_change.pack()
 B_raz.bind("<Button-1>", razIP)
 B_raz.pack()
+B_getConf.bind("<Button-1>",getConfig)
+B_getConf.pack()
 F_choice.pack()
 B_close.pack()
 root.mainloop()
