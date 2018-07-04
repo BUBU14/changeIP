@@ -13,11 +13,12 @@ data = []
 def getData(filepath):
     with open(filepath, newline='') as csvfile:
         spamReader = csv.reader(csvfile, delimiter=';', quotechar='|')
-        for row in spamReader:
+        for i , row in enumerate(spamReader):
             tmp = []
-            for col in row:
-                tmp.append(col)
-            data.append(tmp)
+            if i != 0:
+                for col in row:
+                    tmp.append(col)
+                data.append(tmp)
 
 
 # filepath
@@ -42,9 +43,8 @@ def changeIP(event):
     tmpName = Li_file.get(Li_file.curselection())
     for i, row in enumerate(data):
         if data[i][0] == tmpName :
-            print("Match adress")
             toSet = 'netsh interface ip set address  "Connexion au réseau local" static ' + data[i][1]+' '+data[i][2]+' '+data[i][3]
-            print(type(toSet))
+            print("Changements effectués")
             subprocess.call(toSet, shell=True)
             break
 
