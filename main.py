@@ -4,10 +4,7 @@ from tkinter import FLAT, GROOVE, LEFT, RIGHT
 from tkinter.filedialog import askopenfile
 import csv
 
-root = Tk()
-
 data = []
-
 
 # Open csv and get data
 def getData(filepath):
@@ -19,7 +16,6 @@ def getData(filepath):
                 for col in row:
                     tmp.append(col)
                 data.append(tmp)
-
 
 # filepath
 def getDataIP(event):
@@ -48,9 +44,11 @@ def changeIP(event):
             subprocess.call(toSet, shell=True)
             break
 
-
 def getConfig(event):
     tmpConfig = subprocess.call('netsh interface ipv4 show address')
+
+
+root = Tk()
 
 # Frame
 F_choice = Frame(root, bg="white", borderwidth=2, relief=FLAT)
@@ -74,18 +72,18 @@ Li_file = Listbox(F_change)
 
 # Generation Graphique
 L_titre.pack()
-B_openFile.bind("<Button-1>",getDataIP)
+B_openFile.bind("<Button-1>", getDataIP)
 B_openFile.pack()
-Li_file.bind("<Double-Button-1>",changeIP)
+Li_file.bind("<Double-Button-1>", changeIP)
 Li_file.pack()
-B_getConf.bind("<Button-1>",getConfig)
+B_getConf.bind("<Button-1>", getConfig)
 B_getConf.pack()
 F_change.pack(side=LEFT, padx=30, pady=30)
 B_change.bind("<Button-1>", changeIP)
 B_change.pack()
 B_raz.bind("<Button-1>", razIP)
 B_raz.pack()
-B_getConf.bind("<Button-1>",getConfig)
+B_getConf.bind("<Button-1>", getConfig)
 B_getConf.pack()
 F_choice.pack()
 B_close.pack()
