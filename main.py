@@ -1,10 +1,13 @@
 import subprocess
 import string
-from tkinter import Tk, Listbox, Label, Button, Frame,
+from tkinter import Tk, Listbox, Label, Button, Frame, StringVar
 from tkinter import FLAT, GROOVE, LEFT, RAISED
 from tkinter.filedialog import askopenfile
 import csv
 import socket
+import netifaces
+
+
 
 data = []
 
@@ -52,7 +55,25 @@ def changeIP(event):
 # recupere la configuration actuelle
 def getConfig(event):
     MyIp = ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0])
-    L_ip.
+    print(" mon IP :" + MyIp)
+    Net_data = netifaces.interfaces()
+    for l in Net_data:
+        addrs = netifaces.ifaddresses(l)
+
+        try :
+            Ipv4 = addrs[2][0]
+            addr = Ipv4['addr']
+            if(addr == MyIp):
+                print(addr , "---", MyIp)
+                L_ip.configure(text=("IP : " + str(Ipv4['addr'])))
+                L_ip.pack()
+                L_mask.configure(text=("Mask : "+Ipv4['netmask']))
+                L_mask.pack()
+                L_pass.configure(text=("Broadcast : "+Ipv4['broadcast']))
+                L_pass.pack()
+                break
+        except:
+            break
 
 
 def addConfig(event):
@@ -68,7 +89,10 @@ F_config = Frame(F_choice, borderwidth=2, relief=RAISED)
 
 # Label
 L_titre = Label(root, text="Gestion adresse IP")
-L_ip = Label(root, text="adresse ip")
+L_infoIP = Label(F_config, text="Configuration actuelle")
+L_ip = Label(F_config, text="IP : ")
+L_mask = Label(F_config, text="Masque : ")
+L_pass = Label(F_config,text="passerelle : ")
 
 # Text
 # Button
@@ -97,10 +121,12 @@ F_choice.pack()
 
 B_getConf.bind("<Button-1>", getConfig)
 B_getConf.pack()
+L_infoIP.pack()
 L_ip.pack()
+L_mask.pack()
+L_pass.pack()
 B_addConf.bind("<Button-1>", addConfig)
 B_addConf.pack()
 F_config.pack()
-
 B_close.pack()
 root.mainloop()
