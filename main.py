@@ -1,8 +1,10 @@
 import subprocess
-from tkinter import Tk, Listbox, Label, Button, Frame
-from tkinter import FLAT, GROOVE, LEFT, RIGHT
+import string
+from tkinter import Tk, Listbox, Label, Button, Frame,
+from tkinter import FLAT, GROOVE, LEFT, RAISED
 from tkinter.filedialog import askopenfile
 import csv
+import socket
 
 data = []
 
@@ -25,16 +27,19 @@ def getDataIP(event):
         getAdrr()
 
 
+# recupere les adresse dans le fichier CSV
 def getAdrr():
     for i, row in enumerate(data):
         print(data[i][0])
         Li_file.insert(1, data[i][0])
 
 
+# remise en DHCP
 def razIP(event):
     subprocess.call('netsh interface ipv4 set address "Connexion au réseau local" dhcp', shell=True)
 
 
+#changr l'adresse IP
 def changeIP(event):
     tmpName = Li_file.get(Li_file.curselection())
     for i, row in enumerate(data):
@@ -44,26 +49,33 @@ def changeIP(event):
             subprocess.call(toSet, shell=True)
             break
 
+# recupere la configuration actuelle
 def getConfig(event):
-    tmpConfig = subprocess.call('netsh interface ipv4 show address')
+    MyIp = ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0])
+    L_ip.
 
+
+def addConfig(event):
+    print("add")
 
 root = Tk()
 
 # Frame
 F_choice = Frame(root, bg="white", borderwidth=2, relief=FLAT)
 F_change = Frame(F_choice, borderwidth=2, relief=GROOVE)
-
+F_config = Frame(F_choice, borderwidth=2, relief=RAISED)
 # Spinbox
 
 # Label
 L_titre = Label(root, text="Gestion adresse IP")
+L_ip = Label(root, text="adresse ip")
 
-
+# Text
 # Button
 B_openFile = Button(F_change, text="ouvrir fichier")
 B_change = Button(F_change, text="changer")
-B_getConf = Button(F_change, text="get config")
+B_getConf = Button(F_config, text="get config")
+B_addConf = Button(F_config, text= "ajout config")
 B_raz = Button(F_change, text="raz")
 B_close = Button(root, text="fermer", command=root.quit)
 
@@ -81,8 +93,14 @@ B_change.bind("<Button-1>", changeIP)
 B_change.pack()
 B_raz.bind("<Button-1>", razIP)
 B_raz.pack()
+F_choice.pack()
+
 B_getConf.bind("<Button-1>", getConfig)
 B_getConf.pack()
-F_choice.pack()
+L_ip.pack()
+B_addConf.bind("<Button-1>", addConfig)
+B_addConf.pack()
+F_config.pack()
+
 B_close.pack()
 root.mainloop()
