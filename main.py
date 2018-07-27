@@ -8,7 +8,7 @@ import socket
 import netifaces
 
 
-
+file = 0
 data = []
 
 # Open csv and get data
@@ -26,6 +26,7 @@ def getData(filepath):
 def getDataIP(event):
     filepath = askopenfile(title="Ouvrir un csv", filetypes=[('csv files','.csv'),('all files','.*')])
     if filepath != None:
+        file = filepath
         getData(filepath.name)
         getAdrr()
 
@@ -54,18 +55,21 @@ def changeIP(event):
 
 # recupere la configuration actuelle
 def getConfig(event):
+    # recuperation de mon adresse ip
     MyIp = ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0])
     print(" mon IP :" + MyIp)
+    # recupereration des interfaces
     Net_data = netifaces.interfaces()
+    #rechercher l bonne adresse
     for l in Net_data:
         addrs = netifaces.ifaddresses(l)
 
         try :
             Ipv4 = addrs[2][0]
-            addr = Ipv4['addr']
-            if(addr == MyIp):
-                print(addr , "---", MyIp)
-                L_ip.configure(text=("IP : " + str(Ipv4['addr'])))
+            # recuperer toute les infos
+            if(Ipv4['addr'] == MyIp):
+                print(Ipv4['addr'] , "---", MyIp)
+                L_ip.configure(text=("IP : " + Ipv4['addr']))
                 L_ip.pack()
                 L_mask.configure(text=("Mask : "+Ipv4['netmask']))
                 L_mask.pack()
@@ -79,6 +83,10 @@ def getConfig(event):
 def addConfig(event):
     print("add")
 
+def infoCartes():
+    print(" recuperer le nom de la bonne carte")
+
+carte = infoCartes()
 root = Tk()
 
 # Frame
