@@ -7,7 +7,7 @@ import csv
 import socket
 import netifaces
 
-
+filepath = 0
 data = []
 
 # Open csv and get data
@@ -25,7 +25,6 @@ def getData(filepath):
 def getDataIP(event):
     filepath = askopenfile(title="Ouvrir un csv", filetypes=[('csv files','.csv'),('all files','.*')])
     if filepath != None:
-        file = filepath
         getData(filepath.name)
         getAdrr()
 
@@ -60,13 +59,12 @@ def getConfig(event):
     Net_data = netifaces.interfaces()
     #rechercher la bonne adresse
     for l in Net_data:
-        print(" mon IP :" + MyIp)
         addrs = netifaces.ifaddresses(l)
-
         try :
             Ipv4 = addrs[2][0]
             # recuperer toute les infos
             if(Ipv4['addr'] == MyIp):
+                print(" mon IP :" + MyIp)
                 print(Ipv4['addr'] , "---", MyIp)
                 L_ip.configure(text=("IP : " + Ipv4['addr']))
                 L_ip.pack()
@@ -85,7 +83,8 @@ def addConfig(event):
 def infoCartes():
     print(" recuperer le nom de la bonne carte")
 
-carte = infoCartes()
+
+infoCartes()
 root = Tk()
 
 # Frame
@@ -95,25 +94,25 @@ F_config = Frame(F_choice, borderwidth=2, relief=RAISED)
 # Spinbox
 
 # Label
-L_titre = Label(root, text="Gestion adresse IP")
-L_infoIP = Label(F_config, text="Configuration actuelle")
+L_titre = Label(root, text="IP manager")
+L_infoIP = Label(F_config, text="actual conf")
 L_ip = Label(F_config, text="IP : ")
-L_mask = Label(F_config, text="Masque : ")
-L_pass = Label(F_config,text="passerelle : ")
+L_mask = Label(F_config, text="MAsk : ")
+L_pass = Label(F_config, text="broadcast : ")
 
 # Text
 # Button
-B_openFile = Button(F_change, text="ouvrir fichier")
-B_change = Button(F_change, text="changer")
+B_openFile = Button(F_change, text="open file")
+B_change = Button(F_change, text="change")
 B_getConf = Button(F_config, text="get config")
-B_addConf = Button(F_config, text= "ajout config")
+B_addConf = Button(F_config, text="add config")
 B_raz = Button(F_change, text="raz")
-B_close = Button(root, text="fermer", command=root.quit)
+B_close = Button(root, text="close", command=root.quit)
 
-# Liste
+# List
 Li_file = Listbox(F_change)
 
-# Generation Graphique
+# Generation Graphic
 L_titre.pack()
 B_openFile.bind("<Button-1>", getDataIP)
 B_openFile.pack()
