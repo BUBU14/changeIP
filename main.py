@@ -8,7 +8,6 @@ import socket
 import netifaces
 
 
-file = 0
 data = []
 
 # Open csv and get data
@@ -41,7 +40,7 @@ def getAdrr():
 # remise en DHCP
 def razIP(event):
     subprocess.call('netsh interface ipv4 set address "Connexion au réseau local" dhcp', shell=True)
-
+    print("Retour en DHCP")
 
 #changr l'adresse IP
 def changeIP(event):
@@ -57,11 +56,11 @@ def changeIP(event):
 def getConfig(event):
     # recuperation de mon adresse ip
     MyIp = ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0])
-    print(" mon IP :" + MyIp)
     # recupereration des interfaces
     Net_data = netifaces.interfaces()
-    #rechercher l bonne adresse
+    #rechercher la bonne adresse
     for l in Net_data:
+        print(" mon IP :" + MyIp)
         addrs = netifaces.ifaddresses(l)
 
         try :
