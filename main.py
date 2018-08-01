@@ -1,18 +1,20 @@
 import subprocess
 import string
-from tkinter import Tk, Listbox, Label, Button, Frame, StringVar
+from tkinter import Tk, Listbox, Label, Button, Frame, Entry
 from tkinter import FLAT, GROOVE, LEFT, RAISED
 from tkinter.filedialog import askopenfile
 import csv
 import socket
 import netifaces
 
-filepath = 0
 data = []
+MyConf = []
+# recuperation de mon adresse ip
+MyIp = ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0])
 
 # Open csv and get data
-def getData(filepath):
-    with open(filepath, newline='') as csvfile:
+def getData(file):
+    with open(file, newline='') as csvfile:
         spamReader = csv.reader(csvfile, delimiter=';', quotechar='|')
         for i , row in enumerate(spamReader):
             tmp = []
@@ -35,7 +37,6 @@ def getAdrr():
         print(data[i][0])
         Li_file.insert(1, data[i][0])
 
-
 # remise en DHCP
 def razIP(event):
     subprocess.call('netsh interface ipv4 set address "Connexion au réseau local" dhcp', shell=True)
@@ -53,8 +54,6 @@ def changeIP(event):
 
 # recupere la configuration actuelle
 def getConfig(event):
-    # recuperation de mon adresse ip
-    MyIp = ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0])
     # recupereration des interfaces
     Net_data = netifaces.interfaces()
     #rechercher la bonne adresse
@@ -62,9 +61,11 @@ def getConfig(event):
         addrs = netifaces.ifaddresses(l)
         try :
             Ipv4 = addrs[2][0]
+            print(Ipv4)
             # recuperer toute les infos
             if(Ipv4['addr'] == MyIp):
-                print(" mon IP :" + MyIp)
+                MyConf.append(Ipv4)
+                print("My IP: \t" + MyIp)
                 print(Ipv4['addr'] , "---", MyIp)
                 L_ip.configure(text=("IP : " + Ipv4['addr']))
                 L_ip.pack()
@@ -74,11 +75,31 @@ def getConfig(event):
                 L_pass.pack()
                 break
         except:
+            print("Error Bro ! ")
             break
 
 
 def addConfig(event):
-    print("add")
+    newConf = []
+
+    name = E_name.get()
+    print("Name :\t\t\t",name, "\n\t IP: \t\t",MyConf[0]['addr'] ,"\n\t netmask :\t",MyConf[0]['netmask'],"\n\t broadcast:\t",MyConf[0]['broadcast'])
+    newConf.append(name)
+    newConf.append(MyConf[0]['addr'])
+    newConf.append(MyConf[0]['netmask'])
+    newConf.append('')
+    #newConf.append(MyConf[0]['broadcast'])
+    data.append(newConf)
+    createNewCSV(data)
+    print("done")
+
+def createNewCSV(data):
+    with open('NewAddrs.csv', 'w') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter='', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for i, row in enumerate(data):
+            for j, item in enumerate(row):
+                spamwriter.writerow(data[i][j])
+
 
 def infoCartes():
     print(" recuperer le nom de la bonne carte")
@@ -99,8 +120,10 @@ L_infoIP = Label(F_config, text="actual conf")
 L_ip = Label(F_config, text="IP : ")
 L_mask = Label(F_config, text="MAsk : ")
 L_pass = Label(F_config, text="broadcast : ")
+L_name = Label(F_config, text="name : ")
+# Entry
+E_name = Entry(F_config, textvariable=string, width=30)
 
-# Text
 # Button
 B_openFile = Button(F_change, text="open file")
 B_change = Button(F_change, text="change")
@@ -131,6 +154,8 @@ L_infoIP.pack()
 L_ip.pack()
 L_mask.pack()
 L_pass.pack()
+L_name.pack()
+E_name.pack()
 B_addConf.bind("<Button-1>", addConfig)
 B_addConf.pack()
 F_config.pack()
